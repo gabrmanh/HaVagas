@@ -39,4 +39,6 @@
     <string name="insira_suas_vagas">Insira suas vagas de interesse</string>
     <string name="limpar">Limpar</string>
     <string name="salvar">Salvar</string>
+    <string name="celular">Celular</string>
+    <string name="insira_seu_celular">Insira seu celular</string>
 </resources>
