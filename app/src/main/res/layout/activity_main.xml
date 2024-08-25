@@ -202,35 +202,47 @@
                 android:id="@+id/formacaoRg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/formacaoTv">
 
         <RadioButton
+                android:id="@+id/fundamentalRb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
                 android:layout_weight="1"
                 android:text="@string/fundamental" />
         <RadioButton
+                android:id="@+id/medioRb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
                 android:layout_weight="1"
                 android:text="@string/medio" />
         <RadioButton
+                android:id="@+id/superiorRb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
                 android:layout_weight="1"
                 android:text="@string/superior" />
         <RadioButton
+                android:id="@+id/especializacaoRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:layout_weight="1"
+                android:text="@string/especializacao" />
+        <RadioButton
+                android:id="@+id/mestradoRb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
                 android:layout_weight="1"
                 android:text="@string/mestrado" />
         <RadioButton
+                android:id="@+id/doutoradoRb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
@@ -279,6 +291,23 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     android:hint="@string/insira_seu_ano_de_conclusao"
+                    />
+
+            <TextView
+                    android:id="@+id/instituicaoTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="@string/instituicao"
+                    android:textSize="18sp"
+                    />
+
+            <EditText
+                    android:id="@+id/instituicaoEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:hint="@string/insira_sua_instituicao"
                     />
 
             <TextView
