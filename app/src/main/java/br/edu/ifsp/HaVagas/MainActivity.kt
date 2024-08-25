@@ -1,13 +1,8 @@
 package br.edu.ifsp.HaVagas
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.RadioButton
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import br.edu.ifsp.HaVagas.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +15,13 @@ class MainActivity : AppCompatActivity() {
 
         val emailList = mutableListOf<String>()
 
+        amb.celularCb.setOnClickListener{
+            if(amb.celularCb.isChecked){
+                amb.celularTv.visibility = View.VISIBLE
+                amb.celularEt.visibility = View.VISIBLE
+            }
+        }
+
         amb.limparBt.setOnClickListener {
             limpar()
         }
@@ -30,11 +32,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun limpar() {
-        amb.nomeEt.text.clear()
-        amb.telefoneEt.text.clear()
-        amb.emailEt.text.clear()
-        if (amb.emailCb.isChecked) amb.emailCb.toggle()
-        amb.generoRg.clearCheck()
-        amb.cidadeEt.text.clear()
+
     }
 }
