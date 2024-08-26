@@ -12,11 +12,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var amb: ActivityMainBinding
+    private val amb: ActivityMainBinding by lazy{
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        amb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(amb.root)
 
         amb.celularCb.setOnClickListener{
