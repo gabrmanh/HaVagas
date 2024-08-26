@@ -1,15 +1,15 @@
 package br.edu.ifsp.HaVagas
 
-import android.app.DatePickerDialog
-import android.app.Dialog
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.DatePicker
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import br.edu.ifsp.HaVagas.databinding.ActivityMainBinding
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var amb: ActivityMainBinding
@@ -18,8 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         amb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(amb.root)
-
-        val emailList = mutableListOf<String>()
 
         amb.celularCb.setOnClickListener{
             if(amb.celularCb.isChecked){
@@ -41,18 +39,81 @@ class MainActivity : AppCompatActivity() {
 
         amb.salvarBt.setOnClickListener {
             amb.apply {
-                if(!isValid(nomeEt.text.toString(), emailEt.text.toString(), telefoneEt.text.toString(),
-                        celularEt.text.toString(), dataEt.text.toString(), anoFormaturaEt.text.toString(),
-                        anoConclusaoEt.text.toString(), instituicaoEt.text.toString(), monografiaEt.text.toString(),
-                        orientadorEt.text.toString(), vagasEt.text.toString())){
+                if(!isValid(
+                        emailEt.text.toString(),
+                        telefoneEt.text.toString(),
+                        celularEt.text.toString(),
+                        dataEt.text.toString(),
+                        anoFormaturaEt.text.toString(),
+                        anoConclusaoEt.text.toString()
+                    )){
                     Toast.makeText(this@MainActivity, "Invalid values", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
+                val mailing = emailCb.isChecked
 
+                val gender = getCheckedRadioButtonText(generoRg)
+                val schoolLevel = getCheckedRadioButtonText(formacaoRg)
+                val date = parseDate(dataEt.text.toString())
 
+                val graduation = if (anoFormaturaEt.text.toString().isNotBlank())
+                    anoFormaturaEt.text.toString().toInt() else null
+
+                val conclusion = if (anoConclusaoEt.text.toString().isNotBlank())
+                    anoConclusaoEt.text.toString().toInt() else null
+
+                val form = Form(nomeEt.text.toString(), emailEt.text.toString(), telefoneEt.text.toString(),
+                    celularEt.text.toString(), gender, date, schoolLevel, graduation,
+                    conclusion, instituicaoEt.text.toString(), monografiaEt.text.toString(),
+                    orientadorEt.text.toString(), vagasEt.text.toString(), mailing)
+
+                showFormPopup(form)
             }
         }
+    }
+
+    private fun getCheckedRadioButtonText(rg: RadioGroup): String? {
+        val checkedId = rg.checkedRadioButtonId
+        if (checkedId != -1) {
+            val radioButton = findViewById<RadioButton>(checkedId)
+            return radioButton.text.toString()
+        }
+        return null
+    }
+
+    private fun parseDate(dateString: String): Date? {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return try {
+            dateFormat.parse(dateString)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun showFormPopup(form: Form) {
+        val formDetails = StringBuilder()
+
+        form.name?.let { formDetails.append("Name: $it\n") }
+        form.email?.let { formDetails.append("Email: $it\n") }
+        form.phone?.let { formDetails.append("Phone: $it\n") }
+        form.cellphone?.let { formDetails.append("Cellphone: $it\n") }
+        form.gender?.let { formDetails.append("Gender: $it\n") }
+        form.birthdate?.let { formDetails.append("Birthdate: $it\n") }
+        form.schoolLevel?.let { formDetails.append("School Level: $it\n") }
+        form.graduationYear?.let { formDetails.append("Graduation Year: $it\n") }
+        form.conclusionYear?.let { formDetails.append("Conclusion Year: $it\n") }
+        form.institution?.let { formDetails.append("Institution: $it\n") }
+        form.monography?.let { formDetails.append("Monography: $it\n") }
+        form.tutor?.let { formDetails.append("Tutor: $it\n") }
+        form.positions?.let { formDetails.append("Positions: $it\n") }
+        form.mailingList.let { formDetails.append("Mail list enabled?: ${it}\n") }
+
+        AlertDialog.Builder(this)
+            .setTitle("Form Details")
+            .setMessage(formDetails.toString().trim())
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun showFields(checkedId: Int) {
@@ -128,27 +189,21 @@ class MainActivity : AppCompatActivity() {
         amb.vagasEt.text.clear()
     }
 
-    private fun isValid(name: String?, email: String?, phone: String?, cellphone: String?,
-                        date: String?, graduation: String?, conclusion: String?,
-                        institution: String?, monography: String?, tutor: String?,
-                        positions: String?): Boolean{
-        val nameRegex = "^[A-Za-z\\s]+$".toRegex()
+    private fun isValid(
+        email: String?, phone: String?, cellphone: String?, date: String?,
+        graduation: String?, conclusion: String?
+    ): Boolean {
+
         val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
         val phoneRegex = "^\\d{10,11}$".toRegex()
         val dateRegex = "^\\d{2}/\\d{2}/\\d{4}$".toRegex()
         val yearRegex = "^\\d{4}$".toRegex()
-        val textRegex = "^[A-Za-z0-9\\s]+$".toRegex()
 
-        return (name?.matches(nameRegex) ?: true) &&
-                (email?.matches(emailRegex) ?: true) &&
-                (phone?.matches(phoneRegex) ?: true) &&
-                (cellphone?.matches(phoneRegex) ?: true) &&
-                (date?.matches(dateRegex) ?: true) &&
-                (graduation?.matches(yearRegex) ?: true) &&
-                (conclusion?.matches(yearRegex) ?: true) &&
-                (institution?.matches(textRegex) ?: true) &&
-                (monography?.matches(textRegex) ?: true) &&
-                (tutor?.matches(textRegex) ?: true) &&
-                (positions?.matches(textRegex) ?: true)
+        return (email.isNullOrBlank() || email.matches(emailRegex)) &&
+                (phone.isNullOrBlank() || phone.matches(phoneRegex)) &&
+                (cellphone.isNullOrBlank() || cellphone.matches(phoneRegex)) &&
+                (date.isNullOrBlank() || date.matches(dateRegex)) &&
+                (graduation.isNullOrBlank() || graduation.matches(yearRegex)) &&
+                (conclusion.isNullOrBlank() || conclusion.matches(yearRegex))
     }
 }
